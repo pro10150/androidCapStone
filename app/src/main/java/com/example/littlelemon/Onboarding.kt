@@ -18,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -47,7 +48,7 @@ fun Onboarding(context: Context, navController: NavController) {
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceAround) {
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "Logo",
@@ -75,7 +76,7 @@ fun Onboarding(context: Context, navController: NavController) {
                 text = "First name",
                 style = MaterialTheme.typography.bodySmall
             )
-            TextField(
+            OutlinedTextField(
                 value = firstName,
                 onValueChange = {
                     firstName = it
@@ -91,7 +92,7 @@ fun Onboarding(context: Context, navController: NavController) {
                 text = "Last name",
                 style = MaterialTheme.typography.bodySmall
             )
-            TextField(
+            OutlinedTextField(
                 value = lastName,
                 onValueChange = {
                     lastName = it
@@ -107,7 +108,7 @@ fun Onboarding(context: Context, navController: NavController) {
                 text = "Email",
                 style = MaterialTheme.typography.bodySmall
             )
-            TextField(
+            OutlinedTextField(
                 value = email,
                 onValueChange = {
                     email = it
@@ -131,6 +132,9 @@ fun Onboarding(context: Context, navController: NavController) {
                           val sharedPreferences = context.getSharedPreferences("Little Lemon", Context.MODE_PRIVATE)
 
                           sharedPreferences.edit()
+                              .putString("firstName", firstName)
+                              .putString("lastName", lastName)
+                              .putString("email", email)
                               .putBoolean("isLoggedIn", true)
                               .apply()
                       }
