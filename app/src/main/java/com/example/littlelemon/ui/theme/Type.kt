@@ -19,17 +19,17 @@ val Typography = Typography(
         fontSize = 16.sp
     ),
 
-//    bodyLarge = TextStyle(
-//        fontFamily = karla,
-//        fontWeight = FontWeight.Normal,
-//        fontSize = 32.sp
-//    ),
+    bodyLarge = TextStyle(
+        fontFamily = karla,
+        fontWeight = FontWeight.Normal,
+        fontSize = 32.sp
+    ),
 
-//    bodyMedium = TextStyle(
-//        fontFamily = karla,
-//        fontWeight = FontWeight.Normal,
-//        fontSize = 24.sp
-//    ),
+    bodyMedium = TextStyle(
+        fontFamily = karla,
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp
+    ),
 
     headlineLarge = TextStyle(
         fontFamily = markazi,

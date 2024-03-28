@@ -12,5 +12,5 @@ val SecondaryBeige = Color(0xfffbdabb)
 val HighlightGray = Color(0xffedefee)
 val HighlightBlack = Color(0xff333333)
 
-val fundamentalGray = Color(0xffafafaf)
-val fundamentalWhite = Color(0xffffffff)
+val FundamentalGray = Color(0xffafafaf)
+val FundamentalWhite = Color(0xffffffff)
