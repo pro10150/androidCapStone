@@ -71,11 +71,21 @@ fun Home(context: Context, navController: NavController) {
         Room.databaseBuilder(context = context, AppDatabase::class.java, "database").build()
     }
 
+    var searchPhrase by remember {
+        mutableStateOf("")
+    }
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         val databaseMenuItems by database.menuItemDao().getAll().observeAsState(emptyList())
-        var menuItems: List<MenuItemRoom> = databaseMenuItems
+        var menuItems: List<MenuItemRoom> = if (searchPhrase != "") {
+            databaseMenuItems.filter { it.title.contains(searchPhrase, ignoreCase = true) }
+        } else {
+            databaseMenuItems
+        }
         Header(navController = navController)
-        Hero()
+        Hero() {
+            searchPhrase = it
+        }
         Detail(menuItems = menuItems)
     }
 }
@@ -111,10 +121,11 @@ fun Header(navController: NavController) {
 }
 
 @Composable
-fun Hero() {
+fun Hero(search: (parameter: String) -> Unit) {
     var searchPhrase by remember {
         mutableStateOf("")
     }
+
     Column(modifier = Modifier
         .background(PrimaryGreen)
         .padding(horizontal = 20.dp, vertical = 20.dp)) {
@@ -150,6 +161,7 @@ fun Hero() {
         OutlinedTextField(value = searchPhrase,
             onValueChange = {
                 searchPhrase = it
+                search(searchPhrase)
             },
             placeholder = {
                 Text(
@@ -174,22 +186,42 @@ fun Hero() {
 
 @Composable
 fun Detail(menuItems: List<MenuItemRoom>) {
+
+    var selectedCategory by remember {
+        mutableStateOf("")
+    }
+
+    if (selectedCategory != "") {
+        menuItems.filter { it.category == selectedCategory }
+    }
+
+
+    val filteredItems = if(selectedCategory == "" || selectedCategory == "all"){
+        menuItems
+    } else {
+        menuItems.filter {
+            it.category.contains(selectedCategory, ignoreCase = true)
+        }
+    }
+
     Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 20.dp)) {
         Text(
             text = "ORDER FOR DELIVERY!",
             style = MaterialTheme.typography.bodyLarge
         )
-        MenuCategoryDetails(menuItems = menuItems)
+        MenuCategoryDetails(menuItems = menuItems) {
+            selectedCategory = it
+        }
         Divider(
             color = FundamentalGray,
             thickness = 1.dp
         )
-        MenuItemDetails(menuItems = menuItems)
+        MenuItemDetails(menuItems = filteredItems)
     }
 }
 
 @Composable
-fun MenuCategoryDetails(menuItems: List<MenuItemRoom>) {
+fun MenuCategoryDetails(menuItems: List<MenuItemRoom>, category: (parameter: String) -> Unit) {
     val categories = menuItems.map {
         it.category.replaceFirstChar { character ->
             character.uppercase()
@@ -201,27 +233,25 @@ fun MenuCategoryDetails(menuItems: List<MenuItemRoom>) {
         items(
             items = categoryList,
             itemContent = { category ->
-                MenuCategory(category = category)
+                Button(
+                    onClick = {
+                              category(category)
+                              },
+                    modifier = Modifier.padding(horizontal = 5.dp),
+                    colors = ButtonDefaults.buttonColors(Color.LightGray),
+                    shape = RoundedCornerShape(15.dp)
+                ) {
+                    Text(
+                        text = category,
+                        color = PrimaryGreen,
+                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.ExtraBold)
+                    )
+                }
             }
         )
     }
 }
 
-@Composable
-fun MenuCategory(category: String) {
-    Button(
-        onClick = { /*TODO*/ },
-        modifier = Modifier.padding(horizontal = 5.dp),
-        colors = ButtonDefaults.buttonColors(Color.LightGray),
-        shape = RoundedCornerShape(15.dp)
-    ) {
-        Text(
-            text = category,
-            color = PrimaryGreen,
-            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.ExtraBold)
-        )
-    }
-}
 
 @Composable
 fun MenuItemDetails(menuItems: List<MenuItemRoom>) {
